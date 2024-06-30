@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import com.project.models.service.exception.EntityNotFoundException;
 import com.project.models.model.User;
 import com.project.models.repository.UserRepository;
-import com.project.models.service.IGenericService;
+import com.project.models.service.IUserService;
 import com.project.models.service.exception.EmailExistsException;
 
 @Service
-public class UserService implements IGenericService<User, User, Long> {
+public class UserService implements IUserService {
 	
 	@Autowired
 	UserRepository userRepository;
