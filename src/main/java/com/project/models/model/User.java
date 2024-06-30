@@ -4,20 +4,18 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "TB_USER")
-public class User implements Serializable {
+@MappedSuperclass
+public abstract class User implements Serializable {
 
 	private static final long serialVersionUID = 4683657225489311821L;
 
 	private Long id;
-	private String userName;
+	private String name;
 	private String email;
 	private String password;
 
@@ -25,17 +23,17 @@ public class User implements Serializable {
 
 	}
 
-	public User(Long id, String userName, String email, String password) {
+	public User(Long id, String name, String email, String password) {
 		super();
 		this.id = id;
-		this.userName = userName;
+		this.name = name;
 		this.email = email;
 		this.password = password;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
+	@Column(name = "id")
 	public Long getId() {
 		return id;
 	}
@@ -44,16 +42,16 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "userName", length = 100, nullable = false)
-	public String getUserName() {
-		return userName;
+	@Column(name = "name", length = 100, nullable = false)
+	public String getName() {
+		return name;
 	}
 
-	public void setuserName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = "EMAIL", length = 100, nullable = false) 
+	@Column(name = "email", length = 100, nullable = false) 
 	public String getEmail() {
 		return email;
 	}
@@ -62,7 +60,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "PASSWORD", length = 100, nullable = false) 
+	@Column(name = "password", length = 100, nullable = false) 
 	public String getPassword() {
 		return password;
 	}
@@ -90,7 +88,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", email=" + email + ", password=" + password + "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
 	}
 
 }
