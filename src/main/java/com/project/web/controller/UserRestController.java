@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +35,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 
 	@Override
 	@GetMapping("/get/{id}")
-	public ResponseEntity<?> get(Long id) {
+	public ResponseEntity<?> get(@PathVariable("id") Long id) {
 		var userResponse = userService.get(id);
 		systemMessage.showMessage("Usuário encontrado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
@@ -41,7 +43,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 
 	@Override
 	@PostMapping("/save")
-	public ResponseEntity<?> save(User entity) {
+	public ResponseEntity<?> save(@RequestBody User entity) {
 		var userResponse = userService.save(entity);
 		systemMessage.showMessage("Usuário cadastrado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
@@ -49,7 +51,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 
 	@Override
 	@PutMapping("/update/{id}")
-	public ResponseEntity<?> update(Long id, User entity) {
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody User entity) {
 		var userResponse = userService.update(id, entity);
 		systemMessage.showMessage("Usuário atualizado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
@@ -57,7 +59,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 
 	@Override
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> delete(Long id) {
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		userService.delete(id);
 		systemMessage.showMessage("Usuário excluído com sucesso!", HttpStatus.OK.value(), null);
 		return ResponseEntity.ok().body(systemMessage);
