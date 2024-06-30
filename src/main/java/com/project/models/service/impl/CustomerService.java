@@ -4,20 +4,20 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.models.model.User;
-import com.project.models.service.IUserService;
+import com.project.models.model.Customer;
+import com.project.models.service.ICustomerService;
 
 @Service
-public class UserService implements IUserService {
+public class CustomerService implements ICustomerService {
 
 	@Override
-	public User save(User entity) {
+	public Customer save(Customer entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public User update(Long id, User entity) {
+	public Customer update(Long id, Customer entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -29,13 +29,13 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User read(Long id) {
+	public Customer read(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<User> list() {
+	public List<Customer> list() {
 		// TODO Auto-generated method stub
 		return null;
 	}
