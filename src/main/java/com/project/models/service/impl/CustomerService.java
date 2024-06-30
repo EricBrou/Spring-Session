@@ -29,7 +29,7 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer read(Long id) {
+	public Customer get(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
