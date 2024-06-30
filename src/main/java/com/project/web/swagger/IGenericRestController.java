@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface IGenericRestController<T, ID> {
 	
-
 	public ResponseEntity<?> list();
 	public ResponseEntity<?> get(ID id);
 	public ResponseEntity<?> save(T entity);

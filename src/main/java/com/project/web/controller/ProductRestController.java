@@ -12,57 +12,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.models.model.User;
-import com.project.models.service.impl.UserService;
+import com.project.models.model.Product;
+import com.project.models.service.impl.ProductService;
 import com.project.web.response.SystemMessage;
-import com.project.web.swagger.IUserRestController;
+import com.project.web.swagger.IProductRestController;
 
 @RestController
-@RequestMapping(value="/rest/user")
-public class UserRestController implements IUserRestController {
+@RequestMapping(value="/rest/product")
+public class ProductRestController implements IProductRestController{
+	
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private SystemMessage<Product> systemMessage;
 
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private SystemMessage<User> systemMessage;
-	
 	@Override
 	@GetMapping(value="/list")
 	public ResponseEntity<?> list() {
-		return ResponseEntity.ok().body(userService.list());
+		return ResponseEntity.ok().body(productService.list());
 	}
 
 	@Override
 	@GetMapping(value="/get/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
-		var userResponse = userService.get(id);
-		systemMessage.showMessage("Usuário encontrado com sucesso!", HttpStatus.OK.value(), userResponse);
+		var productResponse = productService.get(id);
+		systemMessage.showMessage("Produto encontrado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
 
 	@Override
 	@PostMapping(value="/save")
-	public ResponseEntity<?> save(@RequestBody User entity) {
-		var userResponse = userService.save(entity);
-		systemMessage.showMessage("Usuário cadastrado com sucesso!", HttpStatus.OK.value(), userResponse);
+	public ResponseEntity<?> save(@RequestBody Product entity) {
+		var productResponse = productService.save(entity);
+		systemMessage.showMessage("Produto cadastrado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
 
 	@Override
 	@PutMapping(value="/update/{id}")
-	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody User entity) {
-		var userResponse = userService.update(id, entity);
-		systemMessage.showMessage("Usuário atualizado com sucesso!", HttpStatus.OK.value(), userResponse);
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Product entity) {
+		var productResponse = productService.update(id, entity);
+		systemMessage.showMessage("Produto atualizado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
 
 	@Override
 	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-		userService.delete(id);
-		systemMessage.showMessage("Usuário excluído com sucesso!", HttpStatus.OK.value(), null);
+		productService.delete(id);
+		systemMessage.showMessage("Produto excluído com sucesso!", HttpStatus.OK.value(), null);
 		return ResponseEntity.ok().body(systemMessage);
 	}
-
+	
 }

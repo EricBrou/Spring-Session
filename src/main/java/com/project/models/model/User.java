@@ -64,7 +64,7 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "email", length = 50, nullable = false) 
+	@Column(name = "email", length = 50, nullable = false, unique = true) 
 	public String getEmail() {
 		return email;
 	}
