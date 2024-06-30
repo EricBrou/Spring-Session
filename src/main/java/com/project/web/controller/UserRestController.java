@@ -18,7 +18,7 @@ import com.project.web.response.SystemMessage;
 import com.project.web.swagger.IGenericRestController;
 
 @RestController
-@RequestMapping("/rest/user")
+@RequestMapping(value="/rest/user")
 public class UserRestController implements IGenericRestController<User, Long> {
 
 	@Autowired
@@ -28,13 +28,13 @@ public class UserRestController implements IGenericRestController<User, Long> {
 	private SystemMessage<User> systemMessage;
 	
 	@Override
-	@GetMapping("/list")
+	@GetMapping(value="/list")
 	public ResponseEntity<?> list() {
 		return ResponseEntity.ok().body(userService.list());
 	}
 
 	@Override
-	@GetMapping("/get/{id}")
+	@GetMapping(value="/get/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
 		var userResponse = userService.get(id);
 		systemMessage.showMessage("Usuário encontrado com sucesso!", HttpStatus.OK.value(), userResponse);
@@ -42,7 +42,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 	}
 
 	@Override
-	@PostMapping("/save")
+	@PostMapping(value="/save")
 	public ResponseEntity<?> save(@RequestBody User entity) {
 		var userResponse = userService.save(entity);
 		systemMessage.showMessage("Usuário cadastrado com sucesso!", HttpStatus.OK.value(), userResponse);
@@ -50,7 +50,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 	}
 
 	@Override
-	@PutMapping("/update/{id}")
+	@PutMapping(value="/update/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody User entity) {
 		var userResponse = userService.update(id, entity);
 		systemMessage.showMessage("Usuário atualizado com sucesso!", HttpStatus.OK.value(), userResponse);
@@ -58,7 +58,7 @@ public class UserRestController implements IGenericRestController<User, Long> {
 	}
 
 	@Override
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		userService.delete(id);
 		systemMessage.showMessage("Usuário excluído com sucesso!", HttpStatus.OK.value(), null);

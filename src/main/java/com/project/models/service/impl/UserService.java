@@ -54,14 +54,15 @@ public class UserService implements IGenericService<User, User, Long> {
 
 	@Override
 	public User get(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		var userData = userRepository.findById(id)
+				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
+		return userData;
 	}
 
 	@Override
 	public List<User> list() {
-		// TODO Auto-generated method stub
-		return null;
+		var userData = userRepository.findAll();
+		return userData;
 	}
 
 }
