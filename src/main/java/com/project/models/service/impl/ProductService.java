@@ -18,6 +18,7 @@ public class ProductService implements IProductService{
 
 	@Override
 	public Product save(Product entity) {
+		System.out.println(entity.getUser());
 		Product productResponse = productRepository.save(entity);
 		return productResponse;
 	}
@@ -32,6 +33,7 @@ public class ProductService implements IProductService{
 		productData.setDescription(entity.getDescription());
 		productData.setPrice(entity.getPrice());
 		productData.setCategory(entity.getCategory());
+		productData.setUser(entity.getUser());
 		
 		productResponse = productRepository.saveAndFlush(productData);
 		return productResponse;
