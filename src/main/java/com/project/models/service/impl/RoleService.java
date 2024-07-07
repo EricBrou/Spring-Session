@@ -1,6 +1,7 @@
 package com.project.models.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.project.models.model.Role;
 import com.project.models.repository.RoleRepository;
 import com.project.models.service.IRoleService;
+import com.project.models.service.exception.EmptyFieldNotAllowed;
 import com.project.models.service.exception.EntityNotFoundException;
 import com.project.models.service.exception.RoleExistsException;
 
@@ -19,49 +21,56 @@ public class RoleService implements IRoleService{
 
 	@Override
 	public Role save(Role entity) {
-		var findRole = roleRepository.findByRole(entity.getRole());
+		Optional<Role> findRole = roleRepository.findByRole(entity.getRole());
+		Role roleResponse;
+		
 		if(findRole.isPresent()) {
 			throw new RoleExistsException("Esse Perfil de acesso já existe!");
 		}
-		var roleResponse = roleRepository.save(entity);
+		
+		roleResponse = roleRepository.save(entity);
 		return roleResponse;
 	}
 
 	@Override
 	public Role update(Long id, Role entity) {
-		var roleData = roleRepository.findById(id)
+		Role roleData = roleRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
 		
-		if(roleData.getRole().equals(entity.getRole())) {
-			var findRole = roleRepository.findByRole(entity.getRole());
-			if(findRole.isPresent()) {
-				throw new RoleExistsException("Esse Perfil de acesso já existe!");
-			}
+		Optional<Role> otherRole = roleRepository.findByRole(entity.getRole());		
+		Role roleResponse;
+		
+		if(entity.getRole().equals("")) { 
+			throw new EmptyFieldNotAllowed("O campo role não pode estar vazio"); 
+		}
+
+		if(otherRole.isPresent() && !(otherRole.get().getId().equals(id))) {
+			throw new RoleExistsException("Esse Perfil de acesso já existe!");
 		}
 		
 		roleData.setDescription(entity.getDescription());
 		roleData.setRole(entity.getRole());
 		
-		var roleResponse = roleRepository.saveAndFlush(roleData);
+		roleResponse = roleRepository.saveAndFlush(roleData);
 		return roleResponse;
 	}
 
 	@Override
 	public void delete(Long id) {
 		roleRepository.deleteById(id);
-		
 	}
 
 	@Override
 	public Role get(Long id) {
-		var roleData = roleRepository.findById(id)
+		Role roleData = roleRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
+		
 		return roleData;
 	}
 
 	@Override
 	public List<Role> list() {
-		var roleData = roleRepository.findAll();
+		List<Role> roleData = roleRepository.findAll();
 		return roleData;
 	}
 

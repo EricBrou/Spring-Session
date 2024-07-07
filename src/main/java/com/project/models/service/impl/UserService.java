@@ -1,15 +1,16 @@
 package com.project.models.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.models.service.exception.EntityNotFoundException;
 import com.project.models.model.User;
 import com.project.models.repository.UserRepository;
 import com.project.models.service.IUserService;
 import com.project.models.service.exception.EmailExistsException;
+import com.project.models.service.exception.EntityNotFoundException;
 
 @Service
 public class UserService implements IUserService {
@@ -19,21 +20,26 @@ public class UserService implements IUserService {
 
 	@Override
 	public User save(User entity) {
-		var userEmail = userRepository.findByEmail(entity.getEmail());
+		Optional<User> userEmail = userRepository.findByEmail(entity.getEmail());
+		User userResponse;
+		
 		if(userEmail.isPresent() && userEmail.get().getEmail().equals(entity.getEmail())) {
 			throw new EmailExistsException("Este e-mail já está em uso!");
 		}
-		var userResponse = userRepository.save(entity);
+		
+		userResponse = userRepository.save(entity);
 		return userResponse;
 	}
 
 	@Override
 	public User update(Long id, User entity) {
-		var userData = userRepository.findById(id)
+		User userData = userRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
 		
+		Optional<User> userEmail = userRepository.findByEmail(entity.getEmail());
+		User userResponse;
+		
 		if(!userData.getEmail().equals(entity.getEmail())) {
-			var userEmail = userRepository.findByEmail(entity.getEmail());
 			if(userEmail.isPresent() && userEmail.get().getEmail().equals(entity.getEmail())) {
 				throw new EmailExistsException("Este e-mail já está em uso!");
 			}
@@ -43,7 +49,7 @@ public class UserService implements IUserService {
 		userData.setEmail(entity.getEmail());
 		userData.setPassword(entity.getPassword());
 		
-		var userResponse = userRepository.saveAndFlush(userData);
+		userResponse = userRepository.saveAndFlush(userData);
 		return userResponse;
 	}
 
@@ -54,14 +60,16 @@ public class UserService implements IUserService {
 
 	@Override
 	public User get(Long id) {
-		var userData = userRepository.findById(id)
+		User userData = userRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
+		
 		return userData;
 	}
 
 	@Override
 	public List<User> list() {
-		var userData = userRepository.findAll();
+		List<User> userData = userRepository.findAll();
+
 		return userData;
 	}
 

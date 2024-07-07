@@ -36,7 +36,7 @@ public class RoleRestController implements IRoleRestController{
 	@Override
 	@GetMapping(value="/get/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
-		var roleResponse = roleService.get(id);
+		Role roleResponse = roleService.get(id);
 		systemMessage.showMessage("Perfil de acesso encontrado com sucesso!", HttpStatus.OK.value(), roleResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -44,7 +44,7 @@ public class RoleRestController implements IRoleRestController{
 	@Override
 	@PostMapping(value="/save")
 	public ResponseEntity<?> save(@RequestBody Role entity) {
-		var roleResponse = roleService.save(entity);
+		Role roleResponse = roleService.save(entity);
 		systemMessage.showMessage("Perfil de acesso cadastrado com sucesso!", HttpStatus.OK.value(), roleResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -52,7 +52,7 @@ public class RoleRestController implements IRoleRestController{
 	@Override
 	@PutMapping(value="/update/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Role entity) {
-		var roleResponse = roleService.update(id, entity);
+		Role roleResponse = roleService.update(id, entity);
 		systemMessage.showMessage("Perfil de acesso atualizado com sucesso!", HttpStatus.OK.value(), roleResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
