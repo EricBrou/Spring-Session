@@ -105,7 +105,7 @@ public class User implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, id, password, products, roles, username);
+		return Objects.hash(email, id, password, roles, username);
 	}
 
 	@Override
@@ -118,14 +118,13 @@ public class User implements Serializable {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(email, other.email) && Objects.equals(id, other.id)
-				&& Objects.equals(password, other.password) && Objects.equals(products, other.products)
 				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username);
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roles="
-				+ roles + ", products=" + products + "]";
+				+ roles + "]";
 	}
 
 }

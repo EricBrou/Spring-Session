@@ -48,6 +48,8 @@ public class UserService implements IUserService {
 		userData.setUsername(entity.getUsername());
 		userData.setEmail(entity.getEmail());
 		userData.setPassword(entity.getPassword());
+		userData.setRoles(entity.getRoles());
+		userData.setProducts(entity.getProducts());
 		
 		userResponse = userRepository.saveAndFlush(userData);
 		return userResponse;
