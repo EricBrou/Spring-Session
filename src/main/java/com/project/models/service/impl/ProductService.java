@@ -32,6 +32,7 @@ public class ProductService implements IProductService{
 		productData.setDescription(entity.getDescription());
 		productData.setPrice(entity.getPrice());
 		productData.setCategory(entity.getCategory());
+		productData.setUser(entity.getUser());
 		
 		productResponse = productRepository.saveAndFlush(productData);
 		return productResponse;

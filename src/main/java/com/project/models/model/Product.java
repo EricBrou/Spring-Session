@@ -3,6 +3,8 @@ package com.project.models.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,12 +31,13 @@ public class Product implements Serializable{
 		super();
 	}
 
-	public Product(Long id, String description, double price, String category) {
+	public Product(Long id, String description, double price, String category, User user) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.price = price;
 		this.category = category;
+		this.user = user;
 	}
 
 	@Id
@@ -75,6 +78,7 @@ public class Product implements Serializable{
 		this.category = category;
 	}
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "ID_SELLER", referencedColumnName = "ID")
 	public User getUser() {
