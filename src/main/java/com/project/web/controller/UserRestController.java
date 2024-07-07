@@ -36,7 +36,7 @@ public class UserRestController implements IUserRestController {
 	@Override
 	@GetMapping(value="/get/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
-		var userResponse = userService.get(id);
+		User userResponse = userService.get(id);
 		systemMessage.showMessage("Usuário encontrado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -44,7 +44,7 @@ public class UserRestController implements IUserRestController {
 	@Override
 	@PostMapping(value="/save")
 	public ResponseEntity<?> save(@RequestBody User entity) {
-		var userResponse = userService.save(entity);
+		User userResponse = userService.save(entity);
 		systemMessage.showMessage("Usuário cadastrado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -52,7 +52,7 @@ public class UserRestController implements IUserRestController {
 	@Override
 	@PutMapping(value="/update/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody User entity) {
-		var userResponse = userService.update(id, entity);
+		User userResponse = userService.update(id, entity);
 		systemMessage.showMessage("Usuário atualizado com sucesso!", HttpStatus.OK.value(), userResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}

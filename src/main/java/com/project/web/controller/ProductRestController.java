@@ -36,7 +36,7 @@ public class ProductRestController implements IProductRestController{
 	@Override
 	@GetMapping(value="/get/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
-		var productResponse = productService.get(id);
+		Product productResponse = productService.get(id);
 		systemMessage.showMessage("Produto encontrado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -44,7 +44,7 @@ public class ProductRestController implements IProductRestController{
 	@Override
 	@PostMapping(value="/save")
 	public ResponseEntity<?> save(@RequestBody Product entity) {
-		var productResponse = productService.save(entity);
+		Product productResponse = productService.save(entity);
 		systemMessage.showMessage("Produto cadastrado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}
@@ -52,7 +52,7 @@ public class ProductRestController implements IProductRestController{
 	@Override
 	@PutMapping(value="/update/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Product entity) {
-		var productResponse = productService.update(id, entity);
+		Product productResponse = productService.update(id, entity);
 		systemMessage.showMessage("Produto atualizado com sucesso!", HttpStatus.OK.value(), productResponse);
 		return ResponseEntity.ok().body(systemMessage);
 	}

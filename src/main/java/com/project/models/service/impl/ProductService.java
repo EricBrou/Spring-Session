@@ -18,20 +18,22 @@ public class ProductService implements IProductService{
 
 	@Override
 	public Product save(Product entity) {
-		var productResponse = productRepository.save(entity);
+		Product productResponse = productRepository.save(entity);
 		return productResponse;
 	}
 
 	@Override
 	public Product update(Long id, Product entity) {
-		var productData = productRepository.findById(id)
+		Product productData = productRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
+		
+		Product productResponse;
 		
 		productData.setDescription(entity.getDescription());
 		productData.setPrice(entity.getPrice());
 		productData.setCategory(entity.getCategory());
 		
-		var productResponse = productRepository.saveAndFlush(productData);
+		productResponse = productRepository.saveAndFlush(productData);
 		return productResponse;
 	}
 
@@ -42,14 +44,16 @@ public class ProductService implements IProductService{
 
 	@Override
 	public Product get(Long id) {
-		var productData = productRepository.findById(id)
+		Product productData = productRepository.findById(id)
 				.orElseThrow(()-> new EntityNotFoundException("Entidade não localizada!"));
+		
 		return productData;
 	}
 
 	@Override
 	public List<Product> list() {
-		var productData = productRepository.findAll();
+		List<Product> productData = productRepository.findAll();
+		
 		return productData;
 	}
 
