@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.project.models.service.impl.CustomUserDetailsService;
 import com.project.models.service.security.CryptEncoder;
@@ -27,15 +28,25 @@ public class SecurityConfig {
     private CryptEncoder pwdEncoder;
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	
+    protected SessionFilter sessionFilter() {
+    	return new SessionFilter();
+    }
+    
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
     	http.csrf(csrf->csrf.disable())
 	    	.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 			.securityMatcher("/**").authorizeHttpRequests(config ->
 				config
-					.requestMatchers("/**").permitAll()
+					.requestMatchers("/rest/login").permitAll()
+					.requestMatchers("/rest/user/list").hasRole("USER")
+					.requestMatchers("/rest/user/save").hasRole("USER")
+					.requestMatchers("/rest/role/list").hasRole("ADMIN")
 					.anyRequest().authenticated()
 		);
+    	
+    	http.addFilterBefore(sessionFilter(), UsernamePasswordAuthenticationFilter.class);
     	
 		http.cors(Customizer.withDefaults());
     	
@@ -43,7 +54,7 @@ public class SecurityConfig {
     }
     
     @Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+	protected AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 		var builder = http.getSharedObject(AuthenticationManagerBuilder.class);
 		
 		builder.userDetailsService(userDetailsService)

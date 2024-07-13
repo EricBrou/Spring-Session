@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +26,17 @@ public class LoginService implements ILoginService {
 	
 	@Override
 	public String login(Login login, HttpServletRequest request, HttpServletResponse response) {
-		Optional<User> userData = userRepository.findByEmail(login.getEmail());
+		Optional<User> userDb = userRepository.findByEmail(login.getEmail());
 		HttpSession session = request.getSession(true);
 		
-		if(userData.isEmpty() || 
+		if(userDb.isEmpty() || 
 			login.getPassword().equals("") ||
-			!BCrypt.checkpw(login.getPassword(), userData.get().getPassword())) {
+			!BCrypt.checkpw(login.getPassword(), userDb.get().getPassword())) {
 				request.getSession().invalidate();
 				throw new EntityNotFoundException("Verifique se a senha e o Email estão corretos!");
 		}
 		
+		session.setAttribute("AUTH", new UsernamePasswordAuthenticationToken(userDb.get(), userDb.get().getPassword(), userDb.get().getAuthorities()));
 		session.setAttribute("CART", null);
 		
 		return Base64.getEncoder().encodeToString(session.getId().getBytes());
