@@ -49,7 +49,7 @@ public class LoginService implements ILoginService {
 		HttpSession session;
 		String sessionToken = (String)redisService.get(user.getId().toString()).get(user.getId().toString());
 		Map<String,Object> map = new HashMap<String,Object>();
-		
+
 		if(sessionToken == null) { //TODO: Tem os casos em que a sessão é inválida
 			request.getSession().setAttribute("userId", user.getId());
 			session = request.getSession(true);

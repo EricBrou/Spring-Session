@@ -10,11 +10,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.project.models.service.impl.CustomUserDetailsService;
 import com.project.models.service.security.CryptEncoder;
+import com.project.models.service.security.SessionFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,12 @@ public class SecurityConfig {
     
     @Autowired
     private CryptEncoder pwdEncoder;
-
+    
+    @Bean
+    public SessionFilter sessionFilter() {
+    	return new SessionFilter();
+    }
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	
@@ -38,7 +44,7 @@ public class SecurityConfig {
 					.anyRequest().authenticated()
 		);
     	
-		//http.addFilterBefore(sessionFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(sessionFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 		http.cors(Customizer.withDefaults());
     	
