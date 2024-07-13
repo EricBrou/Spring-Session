@@ -13,7 +13,6 @@ import com.project.models.service.impl.LoginService;
 import com.project.web.response.SystemMessage;
 import com.project.web.swagger.ILoginRestController;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -32,11 +31,6 @@ public class LoginRestController implements ILoginRestController {
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody Login login, HttpServletRequest request, HttpServletResponse response, HttpSession session) {		
 		String sessionToken = loginService.login(login, request, response);
-		
-		Cookie cookie = new Cookie("SESSION", sessionToken);
-		cookie.setMaxAge(3600);
-		cookie.setPath("/");
-		response.addCookie(cookie);
 		
 		systemMessage.showMessage("Login realizado com sucesso!", HttpStatus.OK.value(), sessionToken);
 		return ResponseEntity.ok().body(sessionToken);
