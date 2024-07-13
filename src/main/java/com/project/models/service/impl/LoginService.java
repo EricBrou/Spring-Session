@@ -15,7 +15,6 @@ import com.project.models.repository.UserRepository;
 import com.project.models.service.ILoginService;
 import com.project.models.service.exception.EntityNotFoundException;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -51,12 +50,12 @@ public class LoginService implements ILoginService {
 		String sessionToken = (String)redisService.get(user.getId().toString()).get(user.getId().toString());
 		Map<String,Object> map = new HashMap<String,Object>();
 		
-		if(sessionToken == null) {
+		if(sessionToken == null) { //TODO: Tem os casos em que a sessão é inválida
+			request.getSession().setAttribute("userId", user.getId());
 			session = request.getSession(true);
 			sessionToken = Base64.getEncoder().encodeToString(session.getId().getBytes());
 			
-			map.put(user.getId().toString(), sessionToken);
-			
+			map.put(user.getId().toString(), sessionToken);			
 			redisService.save(user.getId().toString(), map);
 		}
 		
