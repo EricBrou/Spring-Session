@@ -10,12 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.project.models.model.User;
 import com.project.models.repository.UserRepository;
-import com.project.models.service.ICustomUserDetailsService;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class CustomUserDetailsService implements ICustomUserDetailsService, UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;

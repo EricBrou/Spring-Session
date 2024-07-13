@@ -3,6 +3,7 @@ package com.project.models.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,10 +40,26 @@ public class SecurityConfig {
 	    	.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 			.securityMatcher("/**").authorizeHttpRequests(config ->
 				config
-					.requestMatchers("/rest/login").permitAll()
-					.requestMatchers("/rest/user/list").hasRole("USER")
-					.requestMatchers("/rest/user/save").hasRole("USER")
-					.requestMatchers("/rest/role/list").hasRole("ADMIN")
+					.requestMatchers("/**").permitAll()
+					.requestMatchers(HttpMethod.POST, "/rest/user/save").permitAll()
+					.requestMatchers(HttpMethod.POST, "/rest/login").permitAll()
+					.requestMatchers(HttpMethod.GET, "/rest/user/list").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/user/get/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/update/**").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/delete/**").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/product/list").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.GET, "/rest/product/get/**").hasAnyRole("ADMIN","USER","SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/product/save").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/product/update/**").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/product/delete/**").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/role/list").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/role/get/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/role/save").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/role/update/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/role/delete/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/cart/list").hasAnyRole("ADMIN","USER","SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/cart/add/**").hasAnyRole("ADMIN","USER","SELLER")
+					.requestMatchers(HttpMethod.POST, "/rest/cart/delete/**").hasAnyRole("ADMIN","USER","SELLER")
 					.anyRequest().authenticated()
 		);
     	
