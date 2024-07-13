@@ -1,11 +1,13 @@
 package com.project.models.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.models.model.Product;
 import com.project.models.model.Role;
 import com.project.models.model.User;
 import com.project.models.repository.RoleRepository;
@@ -43,20 +45,16 @@ public class UserService implements IUserService {
 			throw new UserRoleNotFound("O cargo 'USER' não foi encontrado! Crie o cargo 'USER' na tabela 'TB_ROLE' para conseguir criar um novo usuário");
 		}
 		
+		//Serve para limpar se caso for enviado produtos/cargos na criação do usuário
+		entity.setRoles(new ArrayList<Role>());
+		entity.setProducts(new ArrayList<Product>());
+		
 		entity.getRoles().add(userRole.get());
 		entity.setPassword(pwdEncoder.encryptPass(entity.getPassword()));
 		
 		userResponse = userRepository.save(entity);
-	
-		setupUserResponse(entity, userResponse);
 		
 		return userResponse;
-	}
-	
-	private void setupUserResponse(User entity, User userResponse) {
-		//A busca do banco é LAZY, então, ele não vai buscar outros objetos que estiverem no usuário ao salvar no banco;
-		userResponse.setRoles(entity.getRoles());
-		userResponse.setProducts(entity.getProducts());
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.project.models.service.impl.CustomUserDetailsService;
 import com.project.models.service.security.CryptEncoder;
@@ -28,34 +29,40 @@ public class SecurityConfig {
     private CryptEncoder pwdEncoder;
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	
+    protected SessionFilter sessionFilter() {
+    	return new SessionFilter();
+    }
+    
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
     	http.csrf(csrf->csrf.disable())
 	    	.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 			.securityMatcher("/**").authorizeHttpRequests(config ->
 				config
-					.requestMatchers("/**").permitAll()
 					.requestMatchers(HttpMethod.POST, "/rest/user/save").permitAll()
 					.requestMatchers(HttpMethod.POST, "/rest/login").permitAll()
 					.requestMatchers(HttpMethod.GET, "/rest/user/list").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/user/get/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/update/**").hasAnyRole("ADMIN", "USER", "SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/delete/**").hasAnyRole("ADMIN", "USER", "SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/product/list").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.GET, "/rest/user/get/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.PUT, "/rest/user/update/**").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.DELETE, "/rest/user/delete/**").hasAnyRole("ADMIN", "USER", "SELLER")
+					.requestMatchers(HttpMethod.GET, "/rest/product/list").hasAnyRole("ADMIN", "USER", "SELLER")
 					.requestMatchers(HttpMethod.GET, "/rest/product/get/**").hasAnyRole("ADMIN","USER","SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/product/save").hasAnyRole("ADMIN","USER","SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/product/update/**").hasAnyRole("ADMIN","USER","SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/product/delete/**").hasAnyRole("ADMIN","USER","SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/role/list").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/role/get/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/rest/product/save").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.PUT, "/rest/product/update/**").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.DELETE, "/rest/product/delete/**").hasAnyRole("ADMIN", "SELLER")
+					.requestMatchers(HttpMethod.GET, "/rest/role/list").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.GET, "/rest/role/get/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.POST, "/rest/role/save").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/role/update/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/role/delete/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/rest/cart/list").hasAnyRole("ADMIN","USER","SELLER")
+					.requestMatchers(HttpMethod.PUT, "/rest/role/update/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.DELETE, "/rest/role/delete/**").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.GET, "/rest/cart/list").hasAnyRole("ADMIN","USER","SELLER")
 					.requestMatchers(HttpMethod.POST, "/rest/cart/add/**").hasAnyRole("ADMIN","USER","SELLER")
-					.requestMatchers(HttpMethod.POST, "/rest/cart/delete/**").hasAnyRole("ADMIN","USER","SELLER")
+					.requestMatchers(HttpMethod.DELETE, "/rest/cart/delete/**").hasAnyRole("ADMIN","USER","SELLER")
 					.anyRequest().authenticated()
 		);
+    	
+    	http.addFilterBefore(sessionFilter(), UsernamePasswordAuthenticationFilter.class);
     	
 		http.cors(Customizer.withDefaults());
     	
@@ -63,7 +70,7 @@ public class SecurityConfig {
     }
     
     @Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+	protected AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 		var builder = http.getSharedObject(AuthenticationManagerBuilder.class);
 		
 		builder.userDetailsService(userDetailsService)
