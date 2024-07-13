@@ -2,8 +2,13 @@ package com.project.models.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,10 +21,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "TB_USER")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 4683657225489311821L;
 
@@ -73,7 +79,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "password", length = 20, nullable = false) 
+	@Column(name = "password", length = 200, nullable = false) 
 	public String getPassword() {
 		return password;
 	}
@@ -102,6 +108,42 @@ public class User implements Serializable {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+	
+	@Override
+	@Transient
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+		
+		for(Role role : this.getRoles()) {
+			auth.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().toUpperCase()));
+		}
+		
+		return auth;
+	}
+
+	@Override
+	@Transient
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	@Transient
+	public boolean isEnabled() {
+		return true;
+	}
 
 	@Override
 	public int hashCode() {
@@ -120,7 +162,7 @@ public class User implements Serializable {
 		return Objects.equals(email, other.email) && Objects.equals(id, other.id)
 				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username);
 	}
-
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roles="

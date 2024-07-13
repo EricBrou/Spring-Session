@@ -1,44 +1,30 @@
 package com.project.models.sessionModel;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import com.project.models.model.Product;
+public class CartSession implements Serializable {
 
-public class CartSession {
-
-	private Long id_user;
-	private List<Product> products;
+	private static final long serialVersionUID = 8119739054444299170L;
+	
+	private List<Long> products;
 	
 	public CartSession() {
 		super();
 	}
 
-	public CartSession(Long id_user, List<Product> products) {
-		super();
-		this.id_user = id_user;
-		this.products = products;
-	}
-
-	public Long getId_user() {
-		return id_user;
-	}
-	
-	public void setId_user(Long id_user) {
-		this.id_user = id_user;
-	}
-	
-	public List<Product> getProducts() {
+	public List<Long> getProducts() {
 		return products;
 	}
-	
-	public void setProducts(List<Product> products) {
+
+	public void setProducts(List<Long> products) {
 		this.products = products;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id_user, products);
+		return Objects.hash(products);
 	}
 
 	@Override
@@ -50,12 +36,12 @@ public class CartSession {
 		if (getClass() != obj.getClass())
 			return false;
 		CartSession other = (CartSession) obj;
-		return Objects.equals(id_user, other.id_user) && Objects.equals(products, other.products);
+		return Objects.equals(products, other.products);
 	}
 
 	@Override
 	public String toString() {
-		return "CartSession [id_user=" + id_user + ", products=" + products + "]";
+		return "CartSession [products=" + products + "]";
 	}
 	
 }
