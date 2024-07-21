@@ -33,7 +33,7 @@ public class LoginRestController implements ILoginRestController {
 		String sessionToken = loginService.login(login, request, response);
 		
 		systemMessage.showMessage("Login realizado com sucesso!", HttpStatus.OK.value(), sessionToken);
-		return ResponseEntity.ok().body(sessionToken);
+		return ResponseEntity.ok().body(systemMessage);
 	}
 
 }
